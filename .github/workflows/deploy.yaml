@@ -1,0 +1,29 @@
+name: Deploy team roles and policies to AWS
+on:
+  workflow_dispatch:
+  path:
+    - "**/teams/*"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for OIDC
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_OIDC_ROLE }}
+          aws-region: sa-east-1
+          role-session-name: GitHubActionsDeployTeamRoles
+
+      - name: Verify AWS Role
+        run: aws sts get-caller-identity
+
+      - name: Deploy to AWS
+        run: aws s3 ls
