@@ -7,7 +7,7 @@ module "team_anders_boundary" {
 resource "aws_iam_role" "deployment_role" {
   name                 = "${var.team_name}-deployment-role"
   path                 = "/deployment-roles/"
-  permissions_boundary = module.team_anders_boundary.boundary_arn
+  permissions_boundary = module.team_anders_boundary.policy_arn
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
