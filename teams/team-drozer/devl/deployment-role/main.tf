@@ -7,7 +7,7 @@ resource "aws_iam_role" "deployment_role" {
       {
         Effect = "Allow"
         Principal = {
-          Federated = "arn:aws:iam::396608777381:oidc-provider/token.actions.githubusercontent.com"
+          Federated = "arn:aws:iam::${var.team_account}:oidc-provider/token.actions.githubusercontent.com"
         }
         Action = "sts:AssumeRoleWithWebIdentity"
         Condition = {
@@ -15,7 +15,7 @@ resource "aws_iam_role" "deployment_role" {
             "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
           }
           StringLike = {
-            "token.actions.githubusercontent.com:sub" = "repo:androzo/${var.team_name}-*:*"
+            "token.actions.githubusercontent.com:sub" = "repo:androzo/${var.team_name}-*/environment:${var.environment}"
           }
         }
       }
@@ -25,7 +25,7 @@ resource "aws_iam_role" "deployment_role" {
   tags = {
     Name        = "${var.team_name}-deployment-role"
     Team        = var.team_name
-    Environment = "devl"
+    Environment = var.environment
   }
 }
 
@@ -62,12 +62,12 @@ resource "aws_iam_policy" "deployment_policy" {
   tags = {
     Name        = "${var.team_name}-deployment-policy"
     Team        = var.team_name
-    Environment = "devl"
+    Environment = var.environment
   }
 }
 
 resource "aws_iam_role_policy_attachment" "attach_deployment_policy" {
   role       = aws_iam_role.deployment_role.name
   policy_arn = aws_iam_policy.deployment_policy.arn
-  depends_on = [ aws_iam_policy.deployment_policy ]
+  depends_on = [aws_iam_policy.deployment_policy]
 }
