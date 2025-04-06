@@ -22,13 +22,14 @@ jobs:
           matrix=$(find teams -type d -name "*-role" | \
             jq -R -s -c 'split("\n") | map(select(. != "")) | map({
               path: .,
-              env: (split("/")[2])  # teams/<team>/<env>/*-role
+              env: (split("/")[2]),
+              team: (split("/")[1])
             })')
           echo "matrix=$matrix"
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
 
   deploy:
-    name: Deploy team roles and policies in ${{ matrix.env }}
+    name: Deploy ${{ matrix.team }} roles in ${{ matrix.env }}
     needs: discover
     runs-on: ubuntu-latest
     strategy:
