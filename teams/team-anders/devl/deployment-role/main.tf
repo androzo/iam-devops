@@ -73,6 +73,9 @@ resource "aws_iam_policy" "deployment_policy" {
     Team        = "devops"
     Environment = var.environment
   }
+
+  depends_on = [module.iam_permission_boundary]
+
 }
 
 resource "aws_iam_role_policy_attachment" "attach_deployment_policy" {

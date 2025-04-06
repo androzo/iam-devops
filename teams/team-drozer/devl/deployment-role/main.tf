@@ -68,6 +68,8 @@ resource "aws_iam_policy" "deployment_policy" {
     ]
   })
 
+  depends_on = [module.iam_permission_boundary]
+
   tags = {
     Name        = "${var.team_name}-deployment-policy"
     Team        = "devops"
