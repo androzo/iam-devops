@@ -1,5 +1,5 @@
 module "team_anders_boundary" {
-  source        = "../../../../modules/permission-boundary"
+  source        = "git::https://github.com/androzo/iam-permission-boundaries/modules/permission-boundary?ref=main"
   team          = var.team_name
   boundary_type = "deployment"
 }
