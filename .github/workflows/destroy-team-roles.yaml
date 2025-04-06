@@ -60,6 +60,6 @@ jobs:
         run: terraform init
         working-directory: ${{ matrix.path }}
 
-      - name: Apply Terraform
+      - name: Terraform Destroy
         run: terraform destroy -auto-approve
         working-directory: ${{ matrix.path }}
