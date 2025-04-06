@@ -28,6 +28,7 @@ jobs:
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
 
   deploy:
+    Name: Deploy team roles and policies in ${{ matrix.env }}
     needs: discover
     runs-on: ubuntu-latest
     strategy:
@@ -39,9 +40,6 @@ jobs:
       contents: read
 
     steps:
-      - name: Deploying team roles and policies to AWS
-        run: echo "Deploying team roles and policies to AWS for environment ${{ matrix.env }}"
-
       - name: Checkout code
         uses: actions/checkout@v4
 
