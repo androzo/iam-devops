@@ -1,5 +1,13 @@
+module "team_anders_boundary" {
+  source        = "../../../../modules/permission-boundary"
+  team          = var.team_name
+  boundary_type = "deployment"
+}
+
 resource "aws_iam_role" "deployment_role" {
-  name = "${var.team_name}-deployment-role"
+  name                 = "${var.team_name}-deployment-role"
+  path                 = "/deployment-roles/"
+  permissions_boundary = module.team_anders_boundary.boundary_arn
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -24,7 +32,7 @@ resource "aws_iam_role" "deployment_role" {
 
   tags = {
     Name        = "${var.team_name}-deployment-role"
-    Team        = var.team_name
+    Team        = "devops"
     Environment = var.environment
   }
 }
@@ -61,7 +69,7 @@ resource "aws_iam_policy" "deployment_policy" {
 
   tags = {
     Name        = "${var.team_name}-deployment-policy"
-    Team        = var.team_name
+    Team        = "devops"
     Environment = var.environment
   }
 }
