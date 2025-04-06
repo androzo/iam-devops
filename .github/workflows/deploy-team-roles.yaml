@@ -66,7 +66,7 @@ jobs:
 
       - name: Plan Terraform
         run: |
-          terraform plan -out=tfplan
+          terraform plan -out=tfplan.binary
           terraform show -json tfplan.binary > tfplan.json
         working-directory: ${{ matrix.path }}
 
