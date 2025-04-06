@@ -40,6 +40,7 @@ resource "aws_iam_role" "deployment_role" {
 resource "aws_iam_policy" "deployment_policy" {
   name        = "${var.team_name}-deployment-policy"
   description = "Policy granting access to  resources tagged with Team=${var.team_name}"
+  path        = "/deployment-policies/"
 
   policy = jsonencode({
     Version = "2012-10-17"

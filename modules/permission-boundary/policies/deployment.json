@@ -29,12 +29,14 @@
       "Action": "iam:PassRole",
       "Resource": "*",
       "Condition": {
-        "ArnNotLike": {
+        "StringNotLike": {
           "iam:PassedToService": [
             "ec2.amazonaws.com",
             "lambda.amazonaws.com",
             "ecs-tasks.amazonaws.com"
-          ],
+          ]
+        },
+        "ArnNotLikeIfExists": {
           "aws:PrincipalArn": "arn:aws:iam::*:role/${team}-deployment-role"
         }
       }
