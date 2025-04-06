@@ -1,5 +1,5 @@
-module "team_anders_boundary" {
-  source        = "git::https://github.com/androzo/iam-permission-boundaries/modules/permission-boundary?ref=main"
+module "iam_permission_boundary" {
+  source        = "git::https://github.com/androzo/iam-permission-boundaries.git//modules/permission-boundary?ref=main"
   team          = var.team_name
   boundary_type = "deployment"
 }
@@ -7,7 +7,7 @@ module "team_anders_boundary" {
 resource "aws_iam_role" "deployment_role" {
   name                 = "${var.team_name}-deployment-role"
   path                 = "/deployment-roles/"
-  permissions_boundary = module.team_anders_boundary.policy_arn
+  permissions_boundary = module.iam_permission_boundary.policy_arn
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
