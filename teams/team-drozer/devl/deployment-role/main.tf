@@ -32,8 +32,8 @@ resource "aws_iam_role" "deployment_role" {
 
   tags = {
     Name        = "${var.team_name}-deployment-role"
-    Team        = "devops"
-    Environment = var.environment
+    team        = "devops"
+    environment = var.environment
   }
 }
 
@@ -51,7 +51,7 @@ resource "aws_iam_policy" "deployment_policy" {
         Resource = "*"
         Condition = {
           StringEquals = {
-            "aws:RequestTag/Team" = var.team_name
+            "aws:RequestTag/team" = var.team_name
           }
         }
       },
@@ -61,7 +61,7 @@ resource "aws_iam_policy" "deployment_policy" {
         Resource = "*"
         Condition = {
           StringEquals = {
-            "s3:ResourceTag/Team" = var.team_name
+            "s3:ResourceTag/team" = var.team_name
           }
         }
       }
@@ -72,8 +72,8 @@ resource "aws_iam_policy" "deployment_policy" {
 
   tags = {
     Name        = "${var.team_name}-deployment-policy"
-    Team        = "devops"
-    Environment = var.environment
+    team        = "devops"
+    environment = var.environment
   }
 }
 
