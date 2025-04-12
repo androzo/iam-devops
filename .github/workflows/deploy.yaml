@@ -29,7 +29,7 @@ jobs:
           echo "matrix=$matrix"
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
   deploy:
-    name: Deploy ${{ matrix.team }} ${{ matix.role}} in ${{ matrix.env }}
+    name: Deploy ${{ matrix.team }} ${{ matix.role }} in ${{ matrix.env }}
     needs: discover
     runs-on: ubuntu-latest
     strategy:
