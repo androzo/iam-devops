@@ -6,7 +6,6 @@ module "iam_permission_boundary" {
 
 resource "aws_iam_role" "deployment_role" {
   name                 = "${var.team_name}-deployment-role"
-  path                 = "/deployment-roles/"
   permissions_boundary = module.iam_permission_boundary.policy_arn
 
   assume_role_policy = jsonencode({
@@ -39,7 +38,6 @@ resource "aws_iam_role" "deployment_role" {
 
 resource "aws_iam_policy" "deployment_policy" {
   name        = "${var.team_name}-deployment-policy"
-  path        = "/deployment-policies/"
   description = "Policy granting access to resources tagged with Team=${var.team_name}"
 
   policy = jsonencode({

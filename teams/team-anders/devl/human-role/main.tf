@@ -1,5 +1,12 @@
+module "iam_permission_boundary" {
+  source        = "git::https://github.com/androzo/iam-permission-boundaries.git//modules/permission-boundary?ref=main"
+  team          = var.team_name
+  boundary_type = "human"
+}
+
 resource "aws_iam_role" "human_role" {
-  name = "${var.team_name}-human-role"
+  name                 = "${var.team_name}-human-role"
+  permissions_boundary = module.iam_permission_boundary.policy_arn
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -73,6 +80,6 @@ resource "aws_iam_policy" "human_policy" {
 
 resource "aws_iam_role_policy_attachment" "attach_human_policy" {
   role       = aws_iam_role.human_role.name
-  policy_arn = aws_iam_policy.human_role_policy.arn
+  policy_arn = aws_iam_policy.human_policy.arn
   depends_on = [aws_iam_policy.human_policy]
 }
