@@ -27,7 +27,6 @@ jobs:
             })')
           echo "matrix=$matrix"
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
-
   deploy:
     name: Deploy ${{ matrix.team }} roles in ${{ matrix.env }}
     needs: discover
