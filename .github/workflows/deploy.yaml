@@ -1,11 +1,14 @@
-name: Destroy team roles and policies to AWS
+name: Deployment
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - "teams/**"
 
 jobs:
   discover:
-    name: Discover Terraform roles
+    name: Discover roles
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -26,7 +29,7 @@ jobs:
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
 
   deploy:
-    name: Destroy ${{ matrix.team }} roles in ${{ matrix.env }}
+    name: Deploy ${{ matrix.team }} roles in ${{ matrix.env }}
     needs: discover
     runs-on: ubuntu-latest
     strategy:
@@ -42,24 +45,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: androzo/terraform-deploy@main
         with:
-          role-to-assume: ${{ secrets.AWS_GITHUB_OIDC_ROLE }}
-          aws-region: sa-east-1
-          role-session-name: GitHubActionsDeployTeamRoles-${{ matrix.env }}
-
-      - name: Verify AWS Role
-        run: aws sts get-caller-identity
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.6
-
-      - name: Initialize Terraform
-        run: terraform init
-        working-directory: ${{ matrix.path }}
-
-      - name: Terraform Destroy
-        run: terraform destroy -auto-approve
-        working-directory: ${{ matrix.path }}
+          terraform_path: ${{ matrix.path }}
+        env:
+          TF_VAR_environment: ${{ matrix.env }}
+          TF_VAR_team_name: ${{ matrix.team }}
+          TF_VAR_region: sa-east-1
