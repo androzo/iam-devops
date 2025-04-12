@@ -15,7 +15,7 @@ resource "aws_iam_role" "deployment_role" {
       {
         Effect = "Allow"
         Principal = {
-          Federated = "arn:aws:iam::${var.team_account}:oidc-provider/token.actions.githubusercontent.com"
+          Federated = "arn:aws:iam::${var.account_number}:oidc-provider/token.actions.githubusercontent.com"
         }
         Action = "sts:AssumeRoleWithWebIdentity"
         Condition = {
