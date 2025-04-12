@@ -1,12 +1,10 @@
-module "iam_permission_boundary" {
-  source        = "git::https://github.com/androzo/iam-permission-boundaries.git//modules/permission-boundary?ref=main"
-  team          = var.team_name
-  boundary_type = "human"
+data "aws_iam_policy" "permissions_boundary" {
+  arn = "arn:aws:iam::${var.account_number}:policy/${var.team_name}-human-permission-boundary"
 }
 
 resource "aws_iam_role" "human_role" {
   name                 = "${var.team_name}-human-role"
-  permissions_boundary = module.iam_permission_boundary.policy_arn
+  permissions_boundary = data.aws_iam_policy.permissions_boundary.arn
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -31,8 +29,8 @@ resource "aws_iam_role" "human_role" {
   }
 
   tags = {
-    Name = "${var.team_name}-human-role"
-    # team        = var.team_name
+    Name        = "${var.team_name}-human-role"
+    team        = var.team_name
     environment = var.environment
   }
 }
@@ -47,37 +45,26 @@ resource "aws_iam_policy" "human_policy" {
       {
         Effect = "Allow"
         Action = [
-          "ec2:Describe*",
-          "s3:ListAllMyBuckets",
-          "s3:GetBucketLocation",
-          "s3:ListBucket"
+          "s3:ListBucket",
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:PutObjectAcl",
+          "s3:GetObjectAcl",
+          "s3:DeleteObjectVersion",
+          "s3:GetObjectVersion",
+          "s3:PutObjectVersionAcl"
         ]
-        Resource = "*",
-        Condition = {
-          StringEquals = {
-            "aws:RequestTag/team" = var.team_name
-          }
-        }
-      },
-      {
-        Effect = "Allow"
-        Action = "s3:*"
         Resource = [
           "arn:aws:s3:::${var.team_name}-*",
           "arn:aws:s3:::${var.team_name}-*/*"
-        ],
-        Condition = {
-          StringEquals = {
-            "aws:RequestTag/team" = var.team_name
-          }
-        }
+        ]
       }
     ]
   })
 
   tags = {
-    Name = "${var.team_name}-human-role-policy"
-    # team        = var.team_name
+    Name        = "${var.team_name}-human-role-policy"
+    team        = var.team_name
     environment = var.environment
   }
 }
