@@ -74,6 +74,8 @@ jobs:
         uses: androzo/aws-validation@main
         with:
           tfplan_path: ${{ matrix.path }}/tfplan.json
+        
+        timeout-minutes: 2
 
       - name: Apply Terraform
         run: terraform apply -auto-approve tfplan
