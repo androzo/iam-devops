@@ -26,6 +26,10 @@ resource "aws_iam_role" "human_role" {
     ]
   })
 
+  lifecycle {
+    ignore_changes = [permissions_boundary]
+  }
+
   tags = {
     Name = "${var.team_name}-human-role"
     # team        = var.team_name
@@ -72,8 +76,8 @@ resource "aws_iam_policy" "human_policy" {
   })
 
   tags = {
-    Name        = "${var.team_name}-human-role-policy"
-    team        = var.team_name
+    Name = "${var.team_name}-human-role-policy"
+    # team        = var.team_name
     environment = var.environment
   }
 }
@@ -81,5 +85,9 @@ resource "aws_iam_policy" "human_policy" {
 resource "aws_iam_role_policy_attachment" "attach_human_policy" {
   role       = aws_iam_role.human_role.name
   policy_arn = aws_iam_policy.human_policy.arn
-  depends_on = [aws_iam_policy.human_policy]
+
+  depends_on = [
+    aws_iam_role.human_role,
+    aws_iam_policy.human_policy
+  ]
 }

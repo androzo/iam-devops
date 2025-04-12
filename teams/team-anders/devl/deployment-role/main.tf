@@ -29,6 +29,10 @@ resource "aws_iam_role" "deployment_role" {
     ]
   })
 
+  lifecycle {
+    ignore_changes = [permissions_boundary]
+  }
+
   tags = {
     Name        = "${var.team_name}-deployment-role"
     team        = "devops"
@@ -79,5 +83,9 @@ resource "aws_iam_policy" "deployment_policy" {
 resource "aws_iam_role_policy_attachment" "attach_deployment_policy" {
   role       = aws_iam_role.deployment_role.name
   policy_arn = aws_iam_policy.deployment_policy.arn
-  depends_on = [aws_iam_policy.deployment_policy]
+
+  depends_on = [
+    aws_iam_policy.deployment_policy,
+    aws_iam_role.deployment_role
+  ]
 }
