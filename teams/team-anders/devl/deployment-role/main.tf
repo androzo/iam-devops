@@ -27,10 +27,6 @@ resource "aws_iam_role" "deployment_role" {
     ]
   })
 
-  lifecycle {
-    ignore_changes = [permissions_boundary]
-  }
-
   tags = {
     Name        = "${var.team_name}-deployment-role"
     team        = "devops"

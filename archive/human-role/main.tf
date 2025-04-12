@@ -24,10 +24,6 @@ resource "aws_iam_role" "human_role" {
     ]
   })
 
-  lifecycle {
-    ignore_changes = [permissions_boundary]
-  }
-
   tags = {
     Name        = "${var.team_name}-human-role"
     team        = var.team_name
