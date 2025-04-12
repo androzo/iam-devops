@@ -48,6 +48,7 @@ jobs:
         uses: androzo/terraform-deploy@main
         with:
           terraform_path: ${{ matrix.path }}
+          role_arn: ${{ secrets.AWS_GITHUB_OIDC_ROLE }}
         env:
           TF_VAR_environment: ${{ matrix.env }}
           TF_VAR_team_name: ${{ matrix.team }}
