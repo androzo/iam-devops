@@ -44,7 +44,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Configure AWS Credentials
+      - name: Deploy terraform
         uses: androzo/terraform-deploy@main
         with:
           terraform_path: ${{ matrix.path }}
