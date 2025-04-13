@@ -91,7 +91,7 @@ jobs:
         shell: bash
 
       - name: test
-        run: jq "." tfplan.json
+        run: jq "." ${{ matrix.path }}/tfplan.json
         shell: bash
 
       - name: Validate IAM Role Policies
