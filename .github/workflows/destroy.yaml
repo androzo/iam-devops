@@ -64,3 +64,5 @@ jobs:
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
         working-directory: ${{ matrix.path }}
+        env:
+          TF_LOG=TRACE
