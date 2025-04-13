@@ -6,6 +6,9 @@ on:
     paths:
       - "teams/**"
 
+permissions:
+  actions: write
+
 jobs:
   discover:
     name: Discover roles
