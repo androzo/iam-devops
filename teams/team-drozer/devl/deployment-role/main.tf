@@ -28,8 +28,8 @@ resource "aws_iam_role" "deployment_role" {
   })
 
   tags = {
-    Name = "${var.team_name}-deployment-role"
-    # team        = "devops"
+    Name        = "${var.team_name}-deployment-role"
+    team        = "devops"
     environment = var.environment
   }
 }
@@ -65,8 +65,8 @@ resource "aws_iam_policy" "deployment_policy" {
   })
 
   tags = {
-    Name = "${var.team_name}-deployment-policy"
-    # team        = "devops"
+    Name        = "${var.team_name}-deployment-policy"
+    team        = "devops"
     environment = var.environment
   }
 }
