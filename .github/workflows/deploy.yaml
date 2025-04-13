@@ -6,9 +6,6 @@ on:
     paths:
       - "teams/**"
 
-permissions:
-  actions: write
-
 jobs:
   discover:
     name: Discover roles
@@ -42,75 +39,18 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    env:
-      TF_VAR_environment: ${{ matrix.env }}
-      TF_VAR_team_name: ${{ matrix.team }}
-      TF_VAR_region: sa-east-1
-      TF_VAR_account_number: ${{ secrets.AWS_ACCOUNT_NUMBER }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Get repo
-        run: |
-          repo_name=$(echo "${{ github.repository }}" | cut -d'/' -f2)
-          echo "REPO_NAME=$repo_name" >> $GITHUB_ENV
-        shell: bash
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Deploy terraform
+        uses: androzo/terraform-deploy@main
         with:
-          role-to-assume: ${{ secrets.AWS_GITHUB_OIDC_ROLE }}
-          aws-region: sa-east-1
-          role-session-name: terraform-deploy-${{ env.REPO_NAME }}
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.6
-
-      - name: Initialize Terraform
-        run: terraform init
-        working-directory: ${{ matrix.path }}
-        shell: bash
-
-      - name: Validate Terraform
-        run: terraform validate
-        working-directory: ${{ matrix.path }}
-        shell: bash
-
-      - name: Plan Terraform
-        run: terraform plan -out=tfplan.binary
-        working-directory: ${{ matrix.path }}
-        shell: bash
-        
-      - name: Save tfplan to Terraform
-        run: terraform show -json tfplan.binary > tfplan.json
-        working-directory: ${{ matrix.path }}
-        shell: bash
-
-      - name: test
-        run: jq "." ${{ matrix.path }}/tfplan.json
-        shell: bash
-
-      - name: Validate IAM Role Policies
-        uses: androzo/aws-validation@main
-        with:
-          tfplan_path: ${{ matrix.path }}/tfplan.json
-
-      - name: Apply Terraform
-        run: terraform apply -auto-approve tfplan.binary
-        working-directory: ${{ matrix.path }}
-        shell: bash
-
-      # - name: Deploy terraform
-      #   uses: androzo/terraform-deploy@main
-      #   with:
-      #     terraform_path: ${{ matrix.path }}
-      #     role_arn: ${{ secrets.AWS_GITHUB_OIDC_ROLE }}
-      #   env:
-      #     TF_VAR_environment: ${{ matrix.env }}
-      #     TF_VAR_team_name: ${{ matrix.team }}
-      #     TF_VAR_region: sa-east-1
-      #     TF_VAR_account_number: ${{ secrets.AWS_ACCOUNT_NUMBER }}
+          terraform_path: ${{ matrix.path }}
+          role_arn: ${{ secrets.AWS_GITHUB_OIDC_ROLE }}
+        env:
+          TF_VAR_environment: ${{ matrix.env }}
+          TF_VAR_team_name: ${{ matrix.team }}
+          TF_VAR_region: sa-east-1
+          TF_VAR_account_number: ${{ secrets.AWS_ACCOUNT_NUMBER }}
