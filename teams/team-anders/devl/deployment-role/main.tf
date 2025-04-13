@@ -20,7 +20,7 @@ resource "aws_iam_role" "deployment_role" {
             "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
           }
           StringLike = {
-            "token.actions.githubusercontent.com:sub" = "repo:androzo/${var.team_name}-*/environment:${var.environment}"
+            "token.actions.githubusercontent.com:sub" = "repo:androzo/${var.team_name}-*:*${var.environment}"
           }
         }
       }
