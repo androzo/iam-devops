@@ -90,6 +90,10 @@ jobs:
         working-directory: ${{ matrix.path }}
         shell: bash
 
+      - name: test
+        run: jq "." tfplan.json
+        shell: bash
+
       - name: Validate IAM Role Policies
         uses: androzo/aws-validation@main
         with:
